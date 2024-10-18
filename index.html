@@ -1,0 +1,116 @@
+<!doctype html><html lang="en"><head><script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script><script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>React App</title><link rel="stylesheet" href="../src/styles.css"><script defer="defer" src="bundle.js"></script></head><body><div id="root"></div><script type="text/babel">let books = [
+    {
+      title: "book1",
+      author: "author1",
+      category: "category1",
+      description: "desc1"
+    },
+    {
+      title: "book2",
+      author: "author2",
+      category: "category2",
+      description: "desc2"
+    },
+    {
+      title: "book3",
+      author: "author2",
+      category: "category2",
+      description: "desc1"
+    }
+  ];
+
+  const App = ({ books, categories }) => {
+    return (
+            <>
+              <AddBook/>
+              <select name="categories" id="category-select" onChange={selectHandler}>
+                <option value="">--Please choose a category--</option>
+                {categories.map((category, index) => (
+                        <option key={index} value={category}>{category}</option>
+                ))}
+              </select>
+              <BookCatalog books={books}></BookCatalog>
+            </>
+    );
+  }
+
+  const BookCatalog = ({ books }) => {
+    return (
+            <div className="book-catalog">
+              {books.map((book, index) => (
+                      <div key={index}><Book book={book}/></div>
+              ))}
+            </div>
+    );
+  };
+
+  const Book = ({book}) => {
+    return (
+            <div className="book-card">
+              <h2>{book.title}</h2>
+              <p><strong>Author:</strong> {book.author}</p>
+              <p><strong>Category:</strong> {book.category}</p>
+              <p><strong>Description:</strong> {book.description}</p>
+            </div>
+    );
+  };
+
+  const AddBook = () => {
+    let newBook = {title: '', author: '', category: '', description: ''};
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      books.push(newBook);
+      renderApp();
+      e.target.reset();
+    };
+
+    const handleInputChange = (e) => {
+      newBook[e.target.name] = e.target.value;
+    };
+
+    return (
+            <form className="add-book-form" onSubmit={handleSubmit}>
+              <h3>Add a New Book</h3>
+              <div>
+                <label>Title: </label>
+                <input type="text" name="title" onChange={handleInputChange} required />
+              </div>
+              <div>
+                <label>Author: </label>
+                <input type="text" name="author" onChange={handleInputChange} required />
+              </div>
+              <div>
+                <label>Category: </label>
+                <input type="text" name="category" onChange={handleInputChange} required />
+              </div>
+              <div>
+                <label>Description: </label>
+                <input type="text" name="description" onChange={handleInputChange} required />
+              </div>
+              <button type="submit">Add Book</button>
+            </form>
+    );
+  };
+
+
+  function selectHandler() {
+    renderApp(document.getElementById("category-select").value)
+  }
+
+  function renderApp(selectedCategory) {
+    let filteredBooks = []
+    if (selectedCategory) {
+      console.log("Selected category:", selectedCategory);
+      filteredBooks = books.filter((book) => book.category === selectedCategory)
+    } else {
+      filteredBooks = books;
+    }
+
+    const categories = [...new Set(books.map(book => book.category))];
+
+    root.render(<App books={filteredBooks} categories={categories} />);
+  }
+
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  renderApp()</script></body></html>
