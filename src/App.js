@@ -1,24 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import BookCatalogComponent from "./components/BookCatalogComponent";
+import AddBookComponent from "./components/AddBookComponent";
 
-function App() {
+function App({ books, categories, addBookFunction, renderFunction }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+          <>
+              <AddBookComponent addFunction={addBookFunction}/>
+              <select name="categories" id="category-select" onChange={renderFunction}>
+                  <option value="">--Please choose a category--</option>
+                  {categories.map((category, index) => (
+                      <option key={index} value={category}>{category}</option>
+                  ))}
+              </select>
+              <BookCatalogComponent books={books}></BookCatalogComponent>
+          </>
+      </div>
   );
 }
 
